@@ -1,15 +1,16 @@
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import styles from "./sidebar.module.css"
-import HomeIcon from '@mui/icons-material/Home';
-import RequestQuoteIcon from '@mui/icons-material/RequestQuote';
-import ListIcon from '@mui/icons-material/List';
-import PersonIcon from '@mui/icons-material/Person';
-import CloseIcon from '@mui/icons-material/Close';
-import LogoutIcon from '@mui/icons-material/Logout';
+import styles from "./sidebar.module.css";
+import HomeIcon from "@mui/icons-material/Home";
+import RequestQuoteIcon from "@mui/icons-material/RequestQuote";
+import ListIcon from "@mui/icons-material/List";
+import PersonIcon from "@mui/icons-material/Person";
+import CloseIcon from "@mui/icons-material/Close";
+import LogoutIcon from "@mui/icons-material/Logout";
 import { ShoppingCartOutlined } from "@mui/icons-material";
-import MenuIcon from '@mui/icons-material/Menu';
+import MenuIcon from "@mui/icons-material/Menu";
+import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 
 const Sidebar = ({ children }) => {
   const navigate = useNavigate();
@@ -20,33 +21,33 @@ const Sidebar = ({ children }) => {
 
   const menuItems = [
     {
-      key: '/',
+      key: "/",
       parent: "HOME",
       route: "/",
       menu_name: "Home",
-      icon: <HomeIcon />
+      icon: <HomeIcon />,
     },
     {
-      key: '/bills',
+      key: "/bills",
       parent: "BILLS",
       route: "/bills",
       menu_name: "Bills",
-      icon: <RequestQuoteIcon />
+      icon: <RequestQuoteIcon />,
     },
     {
-      key: '/items',
+      key: "/items",
       parent: "ITEMS",
       route: "/items",
       menu_name: "Items",
-      icon: <ListIcon />
+      icon: <ListIcon />,
     },
     {
-      key: '/customers',
+      key: "/customers",
       parent: "CUSTOMERS",
       route: "/customers",
       menu_name: "Customers",
-      icon: <PersonIcon />
-    }
+      icon: <PeopleAltIcon />,
+    },
   ];
 
   useEffect(() => {
@@ -54,7 +55,9 @@ const Sidebar = ({ children }) => {
   }, [cartItems]);
 
   useEffect(() => {
-    const currentMenuItem = menuItems.find(item => item.route === location.pathname);
+    const currentMenuItem = menuItems.find(
+      (item) => item.route === location.pathname
+    );
     if (currentMenuItem) {
       setActiveSection(currentMenuItem.parent);
     }
@@ -69,7 +72,7 @@ const Sidebar = ({ children }) => {
   };
 
   const handleMenuClick = (route, parent) => {
-    console.log('Navigating to:', route);
+    console.log("Navigating to:", route);
     navigate(route);
     setActiveSection(parent);
     if (window.innerWidth <= 768) {
@@ -84,26 +87,26 @@ const Sidebar = ({ children }) => {
   return (
     <div className={styles.layout}>
       {loading && <div className={styles.spinner}>Loading...</div>}
-      
-      <div 
+
+      <div
         className={`${isOpen ? styles.sidebarOpen : styles.sidebar}`}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
         <div className={styles["sidebar-header"]}>
-        {isOpen && (
-    <div onClick={() => navigate("/")}>
-      <h1 className={styles.logo}>NEON Sports</h1>
-    </div>
-  )}
-  {isOpen && (
-    <button
-      className={styles["sidebar-close-btn"]}
-      onClick={() => setIsOpen(false)}
-    >
-      <CloseIcon />
-    </button>
-  )}
+          {isOpen && (
+            <div onClick={() => navigate("/")}>
+              <h1 className={styles.logo}>NEON Sports</h1>
+            </div>
+          )}
+          {isOpen && (
+            <button
+              className={styles["sidebar-close-btn"]}
+              onClick={() => setIsOpen(false)}
+            >
+              <CloseIcon />
+            </button>
+          )}
         </div>
 
         <div className={styles["sidebar-content"]}>
@@ -116,7 +119,11 @@ const Sidebar = ({ children }) => {
               >
                 <div
                   className={`
-                    ${isOpen ? styles["sidebar-menu-title-icon-open"] : styles["sidebar-menu-title-icon"]}
+                    ${
+                      isOpen
+                        ? styles["sidebar-menu-title-icon-open"]
+                        : styles["sidebar-menu-title-icon"]
+                    }
                     ${location.pathname === item.route ? styles.active : ""}
                   `}
                 >
@@ -126,10 +133,7 @@ const Sidebar = ({ children }) => {
               </div>
             ))}
 
-            <div 
-              className={styles["menu-section"]}
-              onClick={handleLogout}
-            >
+            <div className={styles["menu-section"]} onClick={handleLogout}>
               <div className={styles["sidebar-menu-title-icon"]}>
                 <LogoutIcon />
                 {isOpen && <p>Logout</p>}
@@ -137,35 +141,32 @@ const Sidebar = ({ children }) => {
             </div>
           </nav>
         </div>
-
-        
       </div>
 
       <div className={styles.content}>
         <div className={styles["content-header"]}>
-          <button 
+          {/* <button
             className={styles["menu-trigger"]}
             onClick={() => setIsOpen(!isOpen)}
           >
             <MenuIcon />
-          </button>
-          <div 
-          className={styles["cart-section"]}
-          onClick={() => navigate("/cart")}
-        >
-          <ShoppingCartOutlined />
-          {cartItems.length > 0 && (
-            <span className={styles["cart-badge"]}>{cartItems.length}</span>
-          )}
+          </button> */}
+          <span></span>
+          <div>{activeSection}</div>
+          <div
+            className={styles["cart-section"]}
+            onClick={() => navigate("/cart")}
+          >
+            <ShoppingCartOutlined />
+            {cartItems.length > 0 && (
+              <span className={styles["cart-badge"]}>{cartItems.length}</span>
+            )}
+          </div>
         </div>
-        </div>
-        <div className={styles["content-body"]}>
-          {children}
-        </div>
-       
+        <div className={styles["content-body"]}>{children}</div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Sidebar
+export default Sidebar;
