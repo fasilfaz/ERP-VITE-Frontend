@@ -93,7 +93,7 @@ const CartPage = () => {
         totalAmount: Number(
           Number(subTotal) + Number(((subTotal / 100) * 18).toFixed(2))
         ),
-        userId: JSON.parse(localStorage.getItem("auth"))._id,
+        // userId: JSON.parse(localStorage.getItem("token"))._id,
       };
       console.log(newObject);
       await axios.post(
