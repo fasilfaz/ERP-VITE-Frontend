@@ -212,11 +212,11 @@
   }
   
   .cart-section {
-    position: absolute;
-    bottom: 80px;
-    width: 100%;
-    padding: 16px;
-    color: rgba(255, 255, 255, 0.65);
+    /* position: absolute; */
+    /* bottom: 80px; */
+    /* width: 100%; */
+    /* padding: 16px; */
+    color: rgb(0, 0, 0);
     cursor: pointer;
     transition: all 0.3s;
     display: flex;
@@ -225,7 +225,7 @@
   }
   
   .cart-section:hover {
-    color: white;
+    color: rgb(21, 21, 21);
   }
   
   .cart-badge {
@@ -257,6 +257,9 @@
     display: flex;
     align-items: center;
     background: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
   }
   
