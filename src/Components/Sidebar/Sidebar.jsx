@@ -137,16 +137,6 @@ const Sidebar = ({ children }) => {
             </div>
           </nav>
         </div>
-
-        <div 
-          className={styles["cart-section"]}
-          onClick={() => navigate("/cart")}
-        >
-          <ShoppingCartOutlined />
-          {cartItems.length > 0 && (
-            <span className={styles["cart-badge"]}>{cartItems.length}</span>
-          )}
-        </div>
       </div>
 
       <div className={styles.content}>
@@ -157,10 +147,20 @@ const Sidebar = ({ children }) => {
           >
             <MenuIcon />
           </button>
+        <div 
+          className={styles["cart-section"]}
+          onClick={() => navigate("/cart")}
+        >
+          <ShoppingCartOutlined />
+          {cartItems.length > 0 && (
+            <span className={styles["cart-badge"]}>{cartItems.length}</span>
+          )}
+        </div>
         </div>
         <div className={styles["content-body"]}>
           {children}
         </div>
+       
       </div>
     </div>
   )
