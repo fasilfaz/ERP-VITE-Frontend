@@ -61,9 +61,9 @@ const Homepage = () => {
         {/* Tabs Container */}
         <div className="w-full bg-white rounded-lg shadow-sm">
           <div className="grid grid-cols-3 sm:grid-cols-6 w-full">
-            {categories.map((category) => (
+            {categories.map((category, index) => (
               <button
-                key={category.name}
+                key={category.name + index}
                 onClick={() => setSelectedCategory(category.name)}
                 className={`relative flex flex-col items-center justify-center p-4 transition-all duration-200 
                   ${
@@ -98,7 +98,7 @@ const Homepage = () => {
         </div>
 
         {/* Content Area */}
-        <div className="mt-8">
+        {/* <div className="mt-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {itemsData
               .filter((item) => item.category === selectedCategory)
@@ -106,7 +106,7 @@ const Homepage = () => {
                 <ItemList key={item.id} item={item} />
               ))}
           </div>
-        </div>
+        </div> */}
       </div>
     </Sidebar>
   );
