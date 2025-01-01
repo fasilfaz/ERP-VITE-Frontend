@@ -95,9 +95,9 @@ const CartPage = () => {
         ),
         userId: JSON.parse(localStorage.getItem("auth"))._id,
       };
-      // console.log(newObject);
+      console.log(newObject);
       await axios.post(
-        "http://localhost:5000//api/bills/add-bills",
+        "http://localhost:5000/api/bills/add-bills",
         newObject
       );
       message.success("Bill Generated");
