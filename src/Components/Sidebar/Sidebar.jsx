@@ -78,7 +78,7 @@ const Sidebar = ({ children }) => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("auth");
+    localStorage.removeItem("token");
     navigate("/login");
   };
   return (
@@ -137,6 +137,8 @@ const Sidebar = ({ children }) => {
             </div>
           </nav>
         </div>
+
+        
       </div>
 
       <div className={styles.content}>
@@ -147,7 +149,7 @@ const Sidebar = ({ children }) => {
           >
             <MenuIcon />
           </button>
-        <div 
+          <div 
           className={styles["cart-section"]}
           onClick={() => navigate("/cart")}
         >
