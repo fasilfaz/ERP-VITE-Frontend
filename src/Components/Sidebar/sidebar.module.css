@@ -111,7 +111,7 @@
   .layout {
     display: flex;
     min-height: 100vh;
-    width: 95rem;
+    width: 100vw;
   }
   
   .spinner {
