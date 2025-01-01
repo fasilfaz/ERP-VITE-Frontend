@@ -34,6 +34,32 @@ const BillsPage = () => {
   // Print functionality
   const handlePrint = useReactToPrint({
     contentRef: componentRef,
+    pageStyle: `
+      @media print {
+        #invoice-POS {
+          width: 100%;
+          height: 100%;
+          margin: 0;
+          padding: 0;
+        }
+        #top {
+          text-align: center;
+        }
+        #mid {
+          margin-top: 20px;
+        }
+        #bot {
+          margin-top: 20px;
+        }
+        table {
+          width: 100%;
+          border-collapse: collapse;
+        }
+        th, td {
+          padding: 10px;
+        }
+      }
+    `,
   });
   // Table columns configuration
   const columns = [

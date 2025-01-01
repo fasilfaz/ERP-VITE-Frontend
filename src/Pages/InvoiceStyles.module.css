@@ -146,9 +146,9 @@
     }
   
     table th, table td {
-      border: 1px solid #ddd;
+      /* border: 1px solid #ddd; */
       padding: 8px;
-      text-align: center;
+      text-align: left;
     }
   
     .footer-note {
