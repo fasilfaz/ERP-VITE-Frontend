@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import Sidebar from "../Components/Sidebar/Sidebar";
-import axios from "axios";
 import { useDispatch } from "react-redux";
+import { get } from "../Utils/Serivces/apiService";
+import { GET_ALL_ITEMS_API } from "../Utils/Contants/Api";
 import ItemList from "../Components/Item/ItemList";
 
 const Homepage = () => {
@@ -38,23 +39,37 @@ const Homepage = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const getAllItems = async () => {
-      try {
-        dispatch({
-          type: "SHOW_LOADING",
-        });
-        const { data } = await axios.get(
-          "http://localhost:5000/api/items/get-item"
-        );
-        setItemsData(data);
-        dispatch({ type: "HIDE_LOADING" });
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getAllItems();
-  }, [dispatch]);
+    // const getAllItems = async () => {
+    //   try {
+    //     dispatch({
+    //       type: "SHOW_LOADING",
+    //     });
+    //     const { data } = await axios.get(
+    //       "http://localhost:5000/api/items/get-item"
+    //     );
+    //     setItemsData(data);
+    //     dispatch({ type: "HIDE_LOADING" });
+    //   } catch (error) {
+    //     console.log(error);
+    //   }
+    // };
+    // getAllItems();
 
+    (
+      async () => {
+          const res = await get(GET_ALL_ITEMS_API);
+          if(res.success) {
+            console.log(res.data, 'data');
+            setItemsData(res.data);
+          } else {
+            console.log(error.message);
+          }
+        
+      }
+    )();
+  }, [dispatch]);
+console.log(`itemsData`, itemsData)
+console.log(`selectedCategory`, selectedCategory)
   return (
     <Sidebar>
       <div className="w-full p-4 bg-gray-50">
@@ -98,15 +113,15 @@ const Homepage = () => {
         </div>
 
         {/* Content Area */}
-        {/* <div className="mt-8">
+        <div className="mt-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {itemsData
-              .filter((item) => item.category === selectedCategory)
+              .filter((item) => item.category.toLowerCase() === selectedCategory.toLowerCase())
               .map((item) => (
-                <ItemList key={item.id} item={item} />
+                <ItemList key={item._id} item={item} />
               ))}
           </div>
-        </div> */}
+        </div>
       </div>
     </Sidebar>
   );

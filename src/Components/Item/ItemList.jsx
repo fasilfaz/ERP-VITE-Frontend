@@ -22,7 +22,7 @@ const ItemList = ({ item }) => {
           src={item.image}
           style={{ height: 200, width: "100%", objectFit: "cover" }}
         />
-        <Meta title={item.name} />
+        {/* <Meta title={item.name} /> */}
         <div className="item-button">
           <Button onClick={() => handleAddTOCart()}>Add to Invoice</Button>
         </div>
