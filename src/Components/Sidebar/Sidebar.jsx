@@ -162,6 +162,7 @@ const Sidebar = ({ children }) => {
         <div className={styles["content-body"]}>
           {children}
         </div>
+       
       </div>
     </div>
   )
