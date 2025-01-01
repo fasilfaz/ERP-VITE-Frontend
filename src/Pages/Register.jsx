@@ -1,30 +1,45 @@
 import { useEffect } from "react";
 import { Form, Input, Button } from "antd";
 import { Link, useNavigate } from "react-router-dom";
-import { message } from "antd";
-import axios from "axios";
 import { useDispatch } from "react-redux";
+import { REGISTER_API } from "../Utils/Contants/Api";
+import { post } from "../Utils/Serivces/apiService";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Register = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleSubmit = async (value) => {
-    try {
-      dispatch({
-        type: "SHOW_LOADING",
+    dispatch({
+      type: "SHOW_LOADING",
+    });
+    const res = await post(REGISTER_API, value);
+    if (res.success) {
+      dispatch({ type: "HIDE_LOADING" });
+      localStorage.setItem("auth", JSON.stringify(res.data.token));
+      toast.success(res.data.message, {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: false,
+        draggable: false,
       });
-      await axios.post(
-        "http://localhost:5000/api/users/register",
-        value
-      );
-      message.success("Register Succesfully");
-      navigate("/login");
+      setTimeout(() => {
+        navigate("/");
+      }, 2000);
+    } else {
       dispatch({ type: "HIDE_LOADING" });
-    } catch (error) {
-      dispatch({ type: "HIDE_LOADING" });
-      message.error("Something Went Wrong");
-      console.log(error);
+      toast.error(res.data.message, {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: false,
+        pauseOnHover: false,
+        draggable: false,
+      });
     }
   };
 
@@ -37,6 +52,7 @@ const Register = () => {
   }, [navigate]);
   return (
     <>
+      <ToastContainer />
       <div className="register">
         <div className="regsiter-form">
           <h1>Neon Sports</h1>
