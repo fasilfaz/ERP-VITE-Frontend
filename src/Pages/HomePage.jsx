@@ -59,26 +59,26 @@ const Homepage = () => {
     <Sidebar>
       <div className="w-full p-4 bg-gray-50">
         {/* Tabs Container */}
-        <div className="w-full bg-white rounded-lg shadow-sm">
-          <div className="grid grid-cols-3 sm:grid-cols-6 w-full">
+        <div className="w-full bg-white rounded-lg shadow-sm overflow-hidden">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 w-full">
             {categories.map((category, index) => (
               <button
                 key={category.name + index}
                 onClick={() => setSelectedCategory(category.name)}
-                className={`relative flex flex-col items-center justify-center p-4 transition-all duration-200 
+                className={`relative p-3 transition-all duration-200 rounded-lg mx-1 my-2
                   ${
                     selectedCategory === category.name
                     ? "bg-blue-50"
                     : "hover:bg-gray-50"
                   }`}
               >
-                <div className="flex flex-col items-center space-y-2">
+                <div className="flex items-center justify-center space-x-2">
                   <img
                     src={category.imageUrl}
                     alt={category.name}
-                    className="h-10 w-16 object-contain"
+                    className="h-8 w-8 object-contain"
                   />
-                  <span className={`text-sm font-medium 
+                  <span className={`text-sm font-medium whitespace-nowrap
                     ${selectedCategory === category.name 
                       ? "text-blue-600" 
                       : "text-gray-600"}`}
@@ -87,7 +87,7 @@ const Homepage = () => {
                   </span>
                 </div>
                 {/* Active indicator bar */}
-                <div className={`absolute bottom-0 left-0 w-full h-0.5 
+                <div className={`absolute bottom-0 left-0 w-full h-0.5 rounded-full
                   ${selectedCategory === category.name 
                     ? "bg-blue-500" 
                     : "bg-transparent"}`} 
