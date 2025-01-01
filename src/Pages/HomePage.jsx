@@ -56,16 +56,16 @@ const Homepage = () => {
     <Sidebar>
       <div className="w-full p-4 bg-gray-50">
         {/* Gradient bar at top */}
-        <div className="w-full h-2 bg-gradient-to-r from-yellow-400 via-red-500 to-pink-500 rounded-t-lg mb-4"></div>
+        <div className="w-full h-2 bg-gradient-to-r from-yellow-400 via-red-500 to-pink-500 rounded-t-lg"></div>
         
         {/* Tabs Container */}
-        <div className="w-full bg-white rounded-lg shadow-sm overflow-hidden">
+        <div className="w-full bg-white rounded-b-lg shadow-sm overflow-hidden">
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 w-full">
             {categories.map((category, index) => (
               <button
                 key={category.name + index}
                 onClick={() => setSelectedCategory(category.name)}
-                className={`relative p-3 transition-all duration-200 rounded-lg mx-1 my-2
+                className={`relative p-3 transition-all duration-200 rounded-t-lg mx-1 my-2
                   ${
                     selectedCategory === category.name
                     ? "bg-gradient-to-r from-yellow-400/20 via-red-500/20 to-pink-500/20"
