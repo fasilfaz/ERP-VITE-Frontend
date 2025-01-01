@@ -39,22 +39,6 @@ const Homepage = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // const getAllItems = async () => {
-    //   try {
-    //     dispatch({
-    //       type: "SHOW_LOADING",
-    //     });
-    //     const { data } = await axios.get(
-    //       "http://localhost:5000/api/items/get-item"
-    //     );
-    //     setItemsData(data);
-    //     dispatch({ type: "HIDE_LOADING" });
-    //   } catch (error) {
-    //     console.log(error);
-    //   }
-    // };
-    // getAllItems();
-
     (
       async () => {
           const res = await get(GET_ALL_ITEMS_API);
@@ -64,15 +48,16 @@ const Homepage = () => {
           } else {
             console.log(error.message);
           }
-        
       }
     )();
   }, [dispatch]);
-console.log(`itemsData`, itemsData)
-console.log(`selectedCategory`, selectedCategory)
+
   return (
     <Sidebar>
       <div className="w-full p-4 bg-gray-50">
+        {/* Gradient bar at top */}
+        <div className="w-full h-2 bg-gradient-to-r from-yellow-400 via-red-500 to-pink-500 rounded-t-lg mb-4"></div>
+        
         {/* Tabs Container */}
         <div className="w-full bg-white rounded-lg shadow-sm overflow-hidden">
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 w-full">
@@ -83,7 +68,7 @@ console.log(`selectedCategory`, selectedCategory)
                 className={`relative p-3 transition-all duration-200 rounded-lg mx-1 my-2
                   ${
                     selectedCategory === category.name
-                    ? "bg-blue-50"
+                    ? "bg-gradient-to-r from-yellow-400/20 via-red-500/20 to-pink-500/20"
                     : "hover:bg-gray-50"
                   }`}
               >
@@ -95,7 +80,7 @@ console.log(`selectedCategory`, selectedCategory)
                   />
                   <span className={`text-sm font-medium whitespace-nowrap
                     ${selectedCategory === category.name 
-                      ? "text-blue-600" 
+                      ? "text-red-500" 
                       : "text-gray-600"}`}
                   >
                     {category.name}
@@ -104,7 +89,7 @@ console.log(`selectedCategory`, selectedCategory)
                 {/* Active indicator bar */}
                 <div className={`absolute bottom-0 left-0 w-full h-0.5 rounded-full
                   ${selectedCategory === category.name 
-                    ? "bg-blue-500" 
+                    ? "bg-gradient-to-r from-yellow-400 via-red-500 to-pink-500" 
                     : "bg-transparent"}`} 
                 />
               </button>
