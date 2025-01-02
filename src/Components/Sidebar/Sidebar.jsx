@@ -80,17 +80,17 @@ const Sidebar = ({ children }) => {
         <div className="h-1 w-full bg-gradient-to-r from-yellow-400 via-red-500 to-pink-500" />
         
         <div className="h-20 px-6 flex items-center justify-between">
-          {isOpen && (
             <div 
               className="flex items-center gap-3 cursor-pointer group" 
               onClick={() => navigate("/")}
-            >
+              >
               <Trophy size={32} className="text-yellow-500 group-hover:scale-110 transition-transform" />
+              {isOpen && (
               <h1 className="text-2xl font-bold bg-gradient-to-r from-yellow-400 via-red-500 to-pink-500 bg-clip-text text-transparent">
                 NEON
               </h1>
+            )}
             </div>
-          )}
           {isOpen && (
             <button 
               className="p-2 rounded-lg hover:bg-gray-100 transition-colors" 
