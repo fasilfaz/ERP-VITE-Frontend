@@ -1,12 +1,11 @@
-import { useEffect } from "react";
 import { Form, Input } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { post } from "../Utils/Serivces/apiService";
 import { REGISTER_API } from "../Utils/Contants/Api";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Trophy } from 'lucide-react';
+import axios from "axios";
 
 const Register = () => {
   const dispatch = useDispatch();
@@ -16,11 +15,26 @@ const Register = () => {
     dispatch({
       type: "SHOW_LOADING",
     });
-    const res = await post(REGISTER_API, value);
-    if (res.success) {
+    axios.post(REGISTER_API, value).then((res) => {
+      if (res.data.success) {
+        dispatch({ type: "HIDE_LOADING" });
+        localStorage.setItem("token", res.data.token);
+        toast.success(res.data.message, {
+          position: "top-center",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: false,
+          pauseOnHover: false,
+          draggable: false,
+        });
+        setTimeout(() => {
+          navigate("/");
+        }, 2000);
+      }
+    })
+    .catch((error) => {
       dispatch({ type: "HIDE_LOADING" });
-      localStorage.setItem("token", JSON.stringify(res.data.token));
-      toast.success(res.data.message, {
+      toast.error(error.response.data.message || error.message, {
         position: "top-center",
         autoClose: 2000,
         hideProgressBar: false,
@@ -28,20 +42,7 @@ const Register = () => {
         pauseOnHover: false,
         draggable: false,
       });
-      setTimeout(() => {
-        navigate("/");
-      }, 2000);
-    } else {
-      dispatch({ type: "HIDE_LOADING" });
-      toast.error(res.data.message, {
-        position: "top-center",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: false,
-        pauseOnHover: false,
-        draggable: false,
-      });
-    }
+    });
   };
 
 
