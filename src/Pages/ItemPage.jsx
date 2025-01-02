@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import axios from "axios";
-import MUIDataTable from "mui-datatables";
+import Sidebar from "../Components/Sidebar/Sidebar";
+import { Package, Search } from "lucide-react";
 import {
   Dialog,
   DialogTitle,
@@ -14,42 +15,36 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
-  Box,
-  Typography,
-  Tooltip
 } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from '@mui/icons-material/Close';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import Sidebar from "../Components/Sidebar/Sidebar";
 
 const ItemPage = () => {
   const dispatch = useDispatch();
   const [itemsData, setItemsData] = useState([]);
   const [openModal, setOpenModal] = useState(false);
   const [editItem, setEditItem] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 8;
   const [formData, setFormData] = useState({
     name: "",
     price: "",
     image: "",
     category: "",
   });
-  const [page, setPage] = useState(1);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [totalCount, setTotalCount] = useState(0);
 
   const getAllItems = async () => {
     try {
       dispatch({ type: "SHOW_LOADING" });
-      const res = await axios.get("http://localhost:5000/api/items/get-item");
-      setItemsData(res.data);
-      setTotalCount(res.data.length);
+      const { data } = await axios.get("http://localhost:5000/api/items/get-item");
+      setItemsData(data);
       dispatch({ type: "HIDE_LOADING" });
     } catch (error) {
       dispatch({ type: "HIDE_LOADING" });
-      console.log(error);
+      console.error(error);
     }
   };
 
@@ -94,262 +89,178 @@ const ItemPage = () => {
     }
   };
 
-  const columns = [
-    { 
-      name: "name", 
-      label: "Name",
-      options: {
-        filter: false,
-        sort: false,
-      }
-    },
-    {
-      name: "image",
-      label: "Image",
-      options: {
-        filter: false,
-        sort: false,
-        customBodyRender: (value) => (
-          <img src={value} alt="item" style={{ height: 60, width: 60 }} />
-        ),
-      },
-    },
-    { 
-      name: "price", 
-      label: "Price",
-      options: {
-        filter: false,
-        sort: false,
-      }
-    },
-    {
-      name: "category",
-      label: "Category",
-      options: {
-        filter: true,
-        sort: false,
-      },
-    },
-    {
-      name: "actions",
-      label: "Actions",
-      options: {
-        filter: false,
-        sort: false,
-        customBodyRender: (_, tableMeta) => {
-          const row = itemsData[tableMeta.rowIndex];
-          return (
-            <Box>
-              <Tooltip title="Edit">
-                <IconButton
-                  onClick={() => {
-                    setEditItem(row);
-                    setFormData(row);
-                    setOpenModal(true);
-                  }}
-                  size="small"
-                  sx={{ color: "#5B8FF9" }}
-                >
-                  <EditIcon />
-                </IconButton>
-              </Tooltip>
-              <Tooltip title="Delete">
-                <IconButton
-                  onClick={() => handleDelete(row)}
-                  size="small"
-                  sx={{ color: "#FE7062" }}
-                >
-                  <DeleteIcon />
-                </IconButton>
-              </Tooltip>
-            </Box>
-          );
-        },
-      },
-    },
-  ];
+  // Filter data based on search term
+  const filteredData = itemsData.filter(item =>
+    item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    item.category.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
-  const theme = createTheme({
-    components: {
-      MuiToolbar: {
-        styleOverrides: {
-          root: {
-            backgroundColor: "#F1F3F7",
-            boxShadow: "none",
-          },
-        },
-      },
-      MuiTableRow: {
-        styleOverrides: {
-          root: {
-            boxShadow: "none",
-            backgroundColor: "none",
-            borderRadius: "15px",
-          },
-          footer: {
-            backgroundColor: "none",
-          },
-        },
-      },
-      MuiTableFooter: {
-        styleOverrides: {
-          root: {
-            borderTop: "none",
-            backgroundColor: "#F1F3F7",
-          },
-        },
-      },
+  // Pagination logic
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const paginatedData = filteredData.slice(startIndex, startIndex + itemsPerPage);
 
-      MuiTableCell: {
-        styleOverrides: {
-          root: {
-            borderBottom: "none",
-            padding: "8px",
-            textAlign: "left",
-          },
-          head: {
-            // backgroundColor: "red",
-            fontWeight: "bold",
-            fontSize: "1rem",
-            textTransform: "uppercase",
-           
-          },
-        },
-      },
-      MuiTable: {
-        styleOverrides: {
-          root: {
-            borderRadius: "15px",
-            background: "none",
-          },
-        },
-      },
-      MuiPaper: {
-        styleOverrides: {
-          root: {
-            borderRadius: "15px",
-            backgroundColor: "#F1F3F7",
-          },
-        },
-      },
-
-      MuiTableBody: {
-        styleOverrides: {
-          root: {
-            borderRadius: "15px",
-            backgroundColor: "none",
-          },
-        },
-      },
-      MuiPopover: {
-        styleOverrides: {
-          paper: {
-            minWidth: "200px",
-          },
-        },
-      },
-      MuiFormGroup: {
-        styleOverrides: {
-          root: {
-            marginLeft: "20px",
-          },
-        },
-      },
-      MuiTypography: {
-        styleOverrides: {
-          root: {
-            textAlign: "left",
-          },
-          caption: {
-            marginTop: "20px",
-            fontSize: "0.875rem",
-            fontWeight: "400",
-            lineHeight: "1.5",
-            color: "rgba(0, 0, 0, 0.87)",
-          },
-        },
-      },
-      MuiFormControl: {
-        styleOverrides: {
-          root: {
-            width: "150px",
-          },
-        },
-      },
-      MuiBox: {
-        styleOverrides: {
-          root: {
-            borderRadius: "15px",
-          },
-        },
-      },
-    },
-  });
-
-  const options = {
-    filterType: "dropdown",
-    responsive: "standard",
-    selectableRows: "none",
-    print: false,
-    download: false,
-    viewColumns: true,
-    filter: true,
-    search: true,
-    rowsPerPage: rowsPerPage,
-    rowsPerPageOptions: [10, 20, 30, 40],
-    serverSide: true,
-    count: totalCount,
-    onTableChange: (action, tableState) => {
-      switch (action) {
-        case "changePage":
-          setPage(tableState.page + 1);
-          break;
-        case "changeRowsPerPage":
-          setRowsPerPage(tableState.rowsPerPage);
-          setPage(1);
-          break;
-        default:
-          break;
-      }
-    },
-    setRowProps: (_, rowIndex) => ({
-      style: {
-        backgroundColor: rowIndex % 2 === 0 ? "#F7F6FE" : "#FFFFFF",
-        color: "black",
-      },
-    }),
-    customToolbar: () => (
-      <Tooltip title="Add Item">
-        <IconButton
-          onClick={() => setOpenModal(true)}
-          sx={{
-            "&:hover": {
-              "& .MuiSvgIcon-root": {
-                color: "#1976d2",
-              },
-            },
-          }}
-        >
-          <AddIcon />
-        </IconButton>
-      </Tooltip>
-    ),
-  };
+  // Calculate statistics
+  const totalItems = itemsData.length;
+  const totalCategories = new Set(itemsData.map(item => item.category)).size;
+  const totalValue = itemsData.reduce((sum, item) => sum + Number(item.price), 0);
 
   return (
     <Sidebar>
+      <div className="p-6">
+        {/* Header */}
+        <div className="mb-8 flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-800 mb-2">Product List</h1>
+            <div className="h-1 w-24 bg-gradient-to-r from-yellow-400 via-red-500 to-pink-500 rounded"></div>
+          </div>
+          <Package size={40} className="text-yellow-500" />
+        </div>
 
-    <Box sx={{ p: 3 }}>
-      
-      <ThemeProvider theme={theme}>
-        <MUIDataTable
-          title="Product List"
-          data={itemsData}
-          columns={columns}
-          options={options}
-        />
-      </ThemeProvider>
+        {/* Stats Section */}
+        <div className="grid grid-cols-3 gap-4 mb-6">
+          <div className="p-6 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-100">
+            <p className="text-sm text-gray-500 mb-1">Total Products</p>
+            <p className="text-2xl font-bold text-gray-900">{totalItems}</p>
+          </div>
+          <div className="p-6 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-100">
+            <p className="text-sm text-gray-500 mb-1">Categories</p>
+            <p className="text-2xl font-bold text-gray-900">{totalCategories}</p>
+          </div>
+          <div className="p-6 bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-100">
+            <p className="text-sm text-gray-500 mb-1">Total Inventory Value</p>
+            <p className="text-2xl font-bold text-gray-900">₹{totalValue.toLocaleString()}</p>
+          </div>
+        </div>
 
+        {/* Search and Add Button */}
+        <div className="mb-6 flex items-center justify-between">
+          <div className="relative flex-1 mr-4">
+            <input
+              type="text"
+              placeholder="Search products..."
+              value={searchTerm}
+              onChange={(e) => {
+                setSearchTerm(e.target.value);
+                setCurrentPage(1);
+              }}
+              className="w-full px-4 py-3 pl-12 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-yellow-400 transition-all"
+            />
+            <Search className="absolute left-4 top-3.5 text-gray-400" size={20} />
+          </div>
+          <Button
+            variant="contained"
+            startIcon={<AddIcon />}
+            onClick={() => setOpenModal(true)}
+            className="bg-gradient-to-r from-yellow-400 via-red-500 to-pink-500"
+            sx={{
+              background: 'linear-gradient(to right, #facc15, #ef4444, #ec4899)',
+              '&:hover': {
+                background: 'linear-gradient(to right, #fbbf24, #dc2626, #db2777)',
+              }
+            }}
+          >
+            Add Product
+          </Button>
+        </div>
+
+        {/* Enhanced Table */}
+        <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="bg-gradient-to-r from-yellow-400/10 via-red-500/10 to-pink-500/10">
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Image</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Name</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700">Category</th>
+                  <th className="px-6 py-4 text-right text-sm font-semibold text-gray-700">Price</th>
+                  <th className="px-6 py-4 text-center text-sm font-semibold text-gray-700">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-100">
+                {paginatedData.map((item) => (
+                  <tr 
+                    key={item._id}
+                    className="group hover:bg-gradient-to-r hover:from-yellow-50 hover:via-red-50 hover:to-pink-50 transition-colors duration-200"
+                  >
+                    <td className="px-6 py-4">
+                      <img 
+                        src={item.image} 
+                        alt={item.name} 
+                        className="h-12 w-12 object-cover rounded-lg"
+                      />
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className="text-sm text-gray-600">{item.name}</span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span className="text-sm text-gray-600">{item.category}</span>
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                      <span className="text-sm font-medium text-gray-900">
+                        ₹{Number(item.price).toLocaleString()}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center justify-center space-x-2">
+                        <IconButton
+                          onClick={() => {
+                            setEditItem(item);
+                            setFormData(item);
+                            setOpenModal(true);
+                          }}
+                          size="small"
+                          className="text-blue-500 hover:text-blue-700"
+                        >
+                          <EditIcon fontSize="small" />
+                        </IconButton>
+                        <IconButton
+                          onClick={() => handleDelete(item)}
+                          size="small"
+                          className="text-red-500 hover:text-red-700"
+                        >
+                          <DeleteIcon fontSize="small" />
+                        </IconButton>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Pagination */}
+          <div className="flex items-center justify-between px-6 py-4 bg-gray-50">
+            <div className="text-sm text-gray-600">
+              Showing {startIndex + 1} to {Math.min(startIndex + itemsPerPage, filteredData.length)} of {filteredData.length} results
+            </div>
+            <div className="flex space-x-2">
+              <button
+                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}
+                className="px-4 py-2 text-sm font-medium rounded-md 
+                  disabled:opacity-50 disabled:cursor-not-allowed
+                  bg-gradient-to-r from-yellow-400 via-red-500 to-pink-500 text-white
+                  hover:opacity-90 transition-opacity"
+              >
+                Previous
+              </button>
+              <button
+                onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                disabled={currentPage === totalPages}
+                className="px-4 py-2 text-sm font-medium rounded-md 
+                  disabled:opacity-50 disabled:cursor-not-allowed
+                  bg-gradient-to-r from-yellow-400 via-red-500 to-pink-500 text-white
+                  hover:opacity-90 transition-opacity"
+              >
+                Next
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Modal */}
       <Dialog 
         open={openModal} 
         onClose={() => {
@@ -361,7 +272,7 @@ const ItemPage = () => {
         fullWidth
       >
         <DialogTitle sx={{ m: 0, p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          {editItem !== null ? "Edit Item" : "Add New Item"}
+          {editItem !== null ? "Edit Product" : "Add New Product"}
           <IconButton
             onClick={() => {
               setOpenModal(false);
@@ -428,13 +339,21 @@ const ItemPage = () => {
             }}>
               Cancel
             </Button>
-            <Button type="submit" variant="contained">
+            <Button 
+              type="submit" 
+              variant="contained"
+              sx={{
+                background: 'linear-gradient(to right, #facc15, #ef4444, #ec4899)',
+                '&:hover': {
+                  background: 'linear-gradient(to right, #fbbf24, #dc2626, #db2777)',
+                }
+              }}
+            >
               {editItem !== null ? "Update" : "Add"}
             </Button>
           </DialogActions>
         </form>
       </Dialog>
-    </Box>
     </Sidebar>
   );
 };

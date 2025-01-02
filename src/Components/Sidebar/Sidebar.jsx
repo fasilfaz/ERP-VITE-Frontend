@@ -53,9 +53,15 @@ const Sidebar = ({ children }) => {
   }, [cartItems]);
 
   useEffect(() => {
-    const currentMenuItem = menuItems.find(item => item.route === location.pathname);
-    if (currentMenuItem) setActiveSection(currentMenuItem.parent);
+    if (location.pathname === '/cart') {
+      setActiveSection('CART');
+    } else {
+      const currentMenuItem = menuItems.find(item => item.route === location.pathname);
+      if (currentMenuItem) setActiveSection(currentMenuItem.parent);
+    }
   }, [location.pathname]);
+
+  const isCartActive = location.pathname === '/cart';
 
   return (
     <div className="flex min-h-screen w-screen bg-gray-50">
@@ -155,10 +161,17 @@ const Sidebar = ({ children }) => {
             <div className="h-8 w-px bg-gray-200" />
             
             <div
-              className="relative cursor-pointer p-2 hover:bg-gray-50 rounded-xl transition-colors"
-              onClick={() => navigate("/cart")}
+              className={`relative cursor-pointer p-2 rounded-xl transition-all ${
+                isCartActive 
+                  ? 'bg-gradient-to-r from-yellow-400 via-red-500 to-pink-500 shadow-lg shadow-pink-500/20' 
+                  : 'hover:bg-gray-50'
+              }`}
+              onClick={() => {
+                navigate("/cart");
+                setActiveSection("CART");
+              }}
             >
-              <ShoppingCartOutlined className="text-gray-600" />
+              <ShoppingCartOutlined className={isCartActive ? 'text-white' : 'text-gray-600'} />
               {cartItems.length > 0 && (
                 <span className="absolute -top-1 -right-1 bg-gradient-to-r from-yellow-400 via-red-500 to-pink-500 
                   text-white text-xs font-medium rounded-full h-5 w-5 flex items-center justify-center shadow-lg">
