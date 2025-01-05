@@ -5,6 +5,7 @@ import { Eye, Trophy, Search } from "lucide-react";
 import { useReactToPrint } from "react-to-print";
 import axios from "axios";
 import { Modal } from "antd";
+import { GET_ALL_BILLS_API } from "../Utils/Contants/Api";
 
 const BillsPage = () => {
   const componentRef = useRef(null);
@@ -19,7 +20,7 @@ const BillsPage = () => {
   const getAllBills = async () => {
     try {
       dispatch({ type: "SHOW_LOADING" });
-      const { data } = await axios.get("http://localhost:5000/api/bills/get-bills");
+      const { data } = await axios.get(GET_ALL_BILLS_API);
       setBillsData(data);
       dispatch({ type: "HIDE_LOADING" });
     } catch (error) {

@@ -3,6 +3,7 @@ import Sidebar from "../Components/Sidebar/Sidebar";
 import { useDispatch } from "react-redux";
 import { Users, Search } from "lucide-react";
 import axios from "axios";
+import { GET_ALL_BILLS_API } from "../Utils/Contants/Api";
 
 const CustomerPage = () => {
   const dispatch = useDispatch();
@@ -14,7 +15,7 @@ const CustomerPage = () => {
   const getAllBills = async () => {
     try {
       dispatch({ type: "SHOW_LOADING" });
-      const { data } = await axios.get("http://localhost:5000/api/bills/get-bills");
+      const { data } = await axios.get(GET_ALL_BILLS_API);
       setBillsData(data);
       dispatch({ type: "HIDE_LOADING" });
     } catch (error) {

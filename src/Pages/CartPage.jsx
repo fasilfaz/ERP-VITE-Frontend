@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Sidebar from "../Components/Sidebar/Sidebar";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -18,6 +18,7 @@ import {
   InputLabel,
 } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
+import { ADD_BILLS_API } from "../Utils/Contants/Api";
 
 const CartPage = () => {
   const [subTotal, setSubTotal] = useState(0);
@@ -84,7 +85,7 @@ const CartPage = () => {
         tax,
         totalAmount: total,
       };
-      await axios.post("http://localhost:5000/api/bills/add-bills", newObject);
+      await axios.post(ADD_BILLS_API, newObject);
       navigate("/bills");
     } catch (error) {
       console.log(error);

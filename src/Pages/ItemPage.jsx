@@ -20,6 +20,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from '@mui/icons-material/Close';
+import { ADD_ITEMS_API, DELETE_ITEMS_API, GET_ALL_ITEMS_API, UPDATE_ITEMS_API } from "../Utils/Contants/Api";
 
 const ItemPage = () => {
   const dispatch = useDispatch();
@@ -39,7 +40,7 @@ const ItemPage = () => {
   const getAllItems = async () => {
     try {
       dispatch({ type: "SHOW_LOADING" });
-      const { data } = await axios.get("http://localhost:5000/api/items/get-item");
+      const { data } = await axios.get(GET_ALL_ITEMS_API);
       setItemsData(data);
       dispatch({ type: "HIDE_LOADING" });
     } catch (error) {
@@ -55,7 +56,7 @@ const ItemPage = () => {
   const handleDelete = async (record) => {
     try {
       dispatch({ type: "SHOW_LOADING" });
-      await axios.post("http://localhost:5000/api/items/delete-item", {
+      await axios.post(DELETE_ITEMS_API, {
         itemId: record._id,
       });
       getAllItems();
@@ -71,9 +72,9 @@ const ItemPage = () => {
     try {
       dispatch({ type: "SHOW_LOADING" });
       if (editItem === null) {
-        await axios.post("http://localhost:5000/api/items/add-item", formData);
+        await axios.post(ADD_ITEMS_API, formData);
       } else {
-        await axios.put("http://localhost:5000/api/items/edit-item", {
+        await axios.put(UPDATE_ITEMS_API, {
           ...formData,
           itemId: editItem._id,
         });
