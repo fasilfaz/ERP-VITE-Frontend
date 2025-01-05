@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import Sidebar from "../Components/Sidebar/Sidebar";
 import { useDispatch } from "react-redux";
-import { Eye, Trophy, Search } from "lucide-react";
+import { Eye, Receipt, Search, Trophy } from "lucide-react";
 import { useReactToPrint } from "react-to-print";
 import axios from "axios";
 import { Modal } from "antd";
@@ -69,7 +69,7 @@ const BillsPage = () => {
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">Invoice List</h1>
           <div className="h-1 w-24 bg-gradient-to-r from-yellow-400 via-red-500 to-pink-500 rounded mx-auto sm:mx-0"></div>
         </div>
-        <Trophy size={32} className="text-yellow-500" />
+        <Receipt size={32} className="text-yellow-500" />
       </div>
 
       {/* Stats Section */}
@@ -135,9 +135,9 @@ const BillsPage = () => {
                   </td>
                   <td className="px-3 sm:px-6 py-3 sm:py-4">
                     <div className="flex items-center">
-                      <div className="h-6 w-6 sm:h-8 sm:w-8 rounded-full bg-gradient-to-r from-yellow-400 via-red-500 to-pink-500 flex items-center justify-center text-white text-xs sm:text-sm font-medium mr-2 sm:mr-3">
+                      {/* <div className="h-6 w-6 sm:h-8 sm:w-8 rounded-full bg-gradient-to-r from-yellow-400 via-red-500 to-pink-500 flex items-center justify-center text-white text-xs sm:text-sm font-medium mr-2 sm:mr-3">
                         {bill.customerName.charAt(0)}
-                      </div>
+                      </div> */}
                       <span className="text-xs sm:text-sm text-gray-600">{bill.customerName}</span>
                     </div>
                   </td>
