@@ -42,11 +42,12 @@ const Homepage = () => {
     (
       async () => {
           const res = await get(GET_ALL_ITEMS_API);
+          console.log(res, 'res');
           if(res.success) {
             console.log(res.data, 'data');
             setItemsData(res.data);
           } else {
-            console.log(error.message);
+            console.log(res);
           }
       }
     )();

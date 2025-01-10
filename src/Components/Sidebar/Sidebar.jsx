@@ -9,6 +9,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { ShoppingCartOutlined } from "@mui/icons-material";
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import { Trophy, Bell } from 'lucide-react';
+import FancyLoader from "./Loader";
 
 const Sidebar = ({ children }) => {
   // ... previous state and effects remain the same ...
@@ -161,9 +162,7 @@ const Sidebar = ({ children }) => {
   return (
     <div className="flex min-h-screen w-screen bg-gray-50">
       {loading && (
-        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 text-white">
-          Loading...
-        </div>
+       <FancyLoader />
       )}
 
       {!isMobile && (
@@ -252,6 +251,22 @@ const Sidebar = ({ children }) => {
                 </span>
               )}
             </div>
+
+            {isMobile && (
+              <div
+              className="flex items-center gap-6"
+            onClick={() => {
+              localStorage.removeItem("token");
+              navigate("/login");
+            }}
+            // className="flex items-center px-4 py-3.5 cursor-pointer text-gray-700 hover:bg-gray-50 rounded-xl mt-8 group relative"
+          >
+            <LogoutIcon className="text-gray-600 group-hover:scale-110 transition-transform" />
+            {isOpen && <span className="ml-4 font-medium">Logout</span>}
+            
+            <div className="absolute inset-0 rounded-xl border border-transparent group-hover:border-gradient-to-r group-hover:from-yellow-400 group-hover:via-red-500 group-hover:to-pink-500 opacity-0 group-hover:opacity-100 transition-opacity" />
+          </div>
+          )}
             
             <div className="hidden sm:flex h-10 w-10 rounded-xl bg-gradient-to-r from-yellow-400 via-red-500 to-pink-500 items-center justify-center text-white font-medium cursor-pointer group-hover:shadow-lg group-hover:shadow-pink-500/20 transition-shadow">
               A
