@@ -1,7 +1,6 @@
-import { useEffect } from "react";
+import { useState } from "react";
 import { Form, Input } from "antd";
 import { Link, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
 import { post } from "../Utils/Serivces/apiService";
 import { REGISTER_API } from "../Utils/Contants/Api";
 import { toast, ToastContainer } from "react-toastify";
@@ -9,16 +8,14 @@ import "react-toastify/dist/ReactToastify.css";
 import { Trophy } from 'lucide-react';
 
 const Register = () => {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (value) => {
-    dispatch({
-      type: "SHOW_LOADING",
-    });
+   setLoading(true);
     const res = await post(REGISTER_API, value);
     if (res.success) {
-      dispatch({ type: "HIDE_LOADING" });
+      setLoading(false);
       localStorage.setItem("token", JSON.stringify(res.data.token));
       toast.success(res.data.message, {
         position: "top-center",
@@ -32,7 +29,7 @@ const Register = () => {
         navigate("/");
       }, 2000);
     } else {
-      dispatch({ type: "HIDE_LOADING" });
+      setLoading(false);
       toast.error(res.data.message, {
         position: "top-center",
         autoClose: 2000,

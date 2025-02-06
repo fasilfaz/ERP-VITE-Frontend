@@ -4,9 +4,11 @@ import { useDispatch } from "react-redux";
 import { Users, Search } from "lucide-react";
 import axios from "axios";
 import { GET_ALL_BILLS_API } from "../Utils/Contants/Api";
+import FancyLoader from "../Components/Sidebar/Loader";
 
 const CustomerPage = () => {
   const dispatch = useDispatch();
+  const [loading, setloading] = useState(false);
   const [billsData, setBillsData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -14,12 +16,12 @@ const CustomerPage = () => {
 
   const getAllBills = async () => {
     try {
-      dispatch({ type: "SHOW_LOADING" });
+      setloading(true);
       const { data } = await axios.get(GET_ALL_BILLS_API);
       setBillsData(data);
-      dispatch({ type: "HIDE_LOADING" });
+      setloading(false);
     } catch (error) {
-      dispatch({ type: "HIDE_LOADING" });
+      setloading(false);
       console.error(error);
     }
   };
@@ -49,6 +51,9 @@ const CustomerPage = () => {
   const startIndex = (currentPage - 1) * itemsPerPage;
   const paginatedData = filteredData.slice(startIndex, startIndex + itemsPerPage);
 
+  if (loading) {
+    return <FancyLoader />;
+  }
   return (
     <Sidebar>
       <div className="p-2 sm:p-4 md:p-6">
@@ -109,7 +114,7 @@ const CustomerPage = () => {
               </thead>
               <tbody className="divide-y divide-gray-100">
                 {paginatedData.map((bill) => (
-                  <tr 
+                  <tr
                     key={bill._id}
                     className="group hover:bg-gradient-to-r hover:from-yellow-50 hover:via-red-50 hover:to-pink-50 transition-colors duration-200"
                   >

@@ -1,17 +1,19 @@
 import { useEffect, useState, useRef } from "react";
 import Sidebar from "../Components/Sidebar/Sidebar";
 import { useDispatch } from "react-redux";
-import { Eye, Receipt, Search, Trophy } from "lucide-react";
+import { Eye, Loader, Receipt, Search, Trophy } from "lucide-react";
 import { useReactToPrint } from "react-to-print";
 import axios from "axios";
 import { Modal } from "antd";
 import { GET_ALL_BILLS_API } from "../Utils/Contants/Api";
+import FancyLoader from "../Components/Sidebar/Loader";
 
 const BillsPage = () => {
   const componentRef = useRef(null);
   const dispatch = useDispatch();
   const [billsData, setBillsData] = useState([]);
   const [popupModal, setPopupModal] = useState(false);
+  const [loading, setloading] = useState(false);
   const [selectedBill, setSelectedBill] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -19,12 +21,12 @@ const BillsPage = () => {
 
   const getAllBills = async () => {
     try {
-      dispatch({ type: "SHOW_LOADING" });
+      setloading(true);
       const { data } = await axios.get(GET_ALL_BILLS_API);
       setBillsData(data);
-      dispatch({ type: "HIDE_LOADING" });
+      setloading(false);
     } catch (error) {
-      dispatch({ type: "HIDE_LOADING" });
+      setloading(false);
       console.error(error);
     }
   };
@@ -59,6 +61,10 @@ const BillsPage = () => {
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const paginatedData = filteredData.slice(startIndex, startIndex + itemsPerPage);
+
+  if(loading) {
+    return <FancyLoader />
+  }
 
   return (
     <Sidebar>

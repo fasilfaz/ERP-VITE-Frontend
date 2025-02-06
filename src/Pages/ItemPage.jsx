@@ -21,11 +21,13 @@ import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from '@mui/icons-material/Close';
 import { ADD_ITEMS_API, DELETE_ITEMS_API, GET_ALL_ITEMS_API, UPDATE_ITEMS_API } from "../Utils/Contants/Api";
+import FancyLoader from "../Components/Sidebar/Loader";
 
 const ItemPage = () => {
   const dispatch = useDispatch();
   const [itemsData, setItemsData] = useState([]);
   const [openModal, setOpenModal] = useState(false);
+  const [loading, setloading] = useState(false);
   const [editItem, setEditItem] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -39,12 +41,12 @@ const ItemPage = () => {
 
   const getAllItems = async () => {
     try {
-      dispatch({ type: "SHOW_LOADING" });
+      setloading(true);
       const { data } = await axios.get(GET_ALL_ITEMS_API);
       setItemsData(data);
-      dispatch({ type: "HIDE_LOADING" });
+      setloading(false);
     } catch (error) {
-      dispatch({ type: "HIDE_LOADING" });
+      setloading(false);
       console.error(error);
     }
   };
@@ -106,6 +108,9 @@ const ItemPage = () => {
   const totalCategories = new Set(itemsData.map(item => item.category)).size;
   const totalValue = itemsData.reduce((sum, item) => sum + Number(item.price), 0);
 
+  if(loading){
+    return <FancyLoader />;
+  }
   return (
     <Sidebar>
       <div className="p-2 sm:p-4 md:p-6">
@@ -180,14 +185,14 @@ const ItemPage = () => {
               </thead>
               <tbody className="divide-y divide-gray-100">
                 {paginatedData.map((item) => (
-                  <tr 
+                  <tr
                     key={item._id}
                     className="group hover:bg-gradient-to-r hover:from-yellow-50 hover:via-red-50 hover:to-pink-50 transition-colors duration-200"
                   >
                     <td className="px-3 sm:px-6 py-3 sm:py-4">
-                      <img 
-                        src={item.image} 
-                        alt={item.name} 
+                      <img
+                        src={item.image}
+                        alt={item.name}
                         className="h-8 w-8 sm:h-12 sm:w-12 object-cover rounded-lg"
                       />
                     </td>
@@ -260,100 +265,100 @@ const ItemPage = () => {
           </div>
         </div>
 
-      {/* Modal */}
-      <Dialog 
-        open={openModal} 
-        onClose={() => {
-          setOpenModal(false);
-          setEditItem(null);
-          setFormData({ name: "", price: "", image: "", category: "" });
-        }}
-        maxWidth="sm"
-        fullWidth
-      >
-        <DialogTitle sx={{ m: 0, p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          {editItem !== null ? "Edit Product" : "Add New Product"}
-          <IconButton
-            onClick={() => {
-              setOpenModal(false);
-              setEditItem(null);
-              setFormData({ name: "", price: "", image: "", category: "" });
-            }}
-          >
-            <CloseIcon />
-          </IconButton>
-        </DialogTitle>
-        <form onSubmit={handleSubmit}>
-          <DialogContent dividers>
-            <TextField
-              fullWidth
-              margin="dense"
-              name="name"
-              label="Name"
-              value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              required
-            />
-            <TextField
-              fullWidth
-              margin="dense"
-              name="price"
-              label="Price"
-              type="number"
-              inputProps={{ min: 0, step: 0.01 }}
-              value={formData.price}
-              onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-              required
-            />
-            <TextField
-              fullWidth
-              margin="dense"
-              name="image"
-              label="Image URL"
-              value={formData.image}
-              onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-              required
-            />
-            <FormControl fullWidth margin="dense">
-              <InputLabel>Category</InputLabel>
-              <Select
-                value={formData.category}
-                label="Category"
-                onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                required
-              >
-                <MenuItem value="Cricket">Cricket</MenuItem>
-                <MenuItem value="Tennis">Tennis</MenuItem>
-                <MenuItem value="Table Tennis">Table Tennis</MenuItem>
-                <MenuItem value="Fitness">Fitness</MenuItem>
-                <MenuItem value="Basketball">Basketball</MenuItem>
-                <MenuItem value="Badminton">Badminton</MenuItem>
-              </Select>
-            </FormControl>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={() => {
-              setOpenModal(false);
-              setEditItem(null);
-              setFormData({ name: "", price: "", image: "", category: "" });
-            }}>
-              Cancel
-            </Button>
-            <Button 
-              type="submit" 
-              variant="contained"
-              sx={{
-                background: 'linear-gradient(to right, #facc15, #ef4444, #ec4899)',
-                '&:hover': {
-                  background: 'linear-gradient(to right, #fbbf24, #dc2626, #db2777)',
-                }
+        {/* Modal */}
+        <Dialog
+          open={openModal}
+          onClose={() => {
+            setOpenModal(false);
+            setEditItem(null);
+            setFormData({ name: "", price: "", image: "", category: "" });
+          }}
+          maxWidth="sm"
+          fullWidth
+        >
+          <DialogTitle sx={{ m: 0, p: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            {editItem !== null ? "Edit Product" : "Add New Product"}
+            <IconButton
+              onClick={() => {
+                setOpenModal(false);
+                setEditItem(null);
+                setFormData({ name: "", price: "", image: "", category: "" });
               }}
             >
-              {editItem !== null ? "Update" : "Add"}
-            </Button>
-          </DialogActions>
-        </form>
-      </Dialog>
+              <CloseIcon />
+            </IconButton>
+          </DialogTitle>
+          <form onSubmit={handleSubmit}>
+            <DialogContent dividers>
+              <TextField
+                fullWidth
+                margin="dense"
+                name="name"
+                label="Name"
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                required
+              />
+              <TextField
+                fullWidth
+                margin="dense"
+                name="price"
+                label="Price"
+                type="number"
+                inputProps={{ min: 0, step: 0.01 }}
+                value={formData.price}
+                onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                required
+              />
+              <TextField
+                fullWidth
+                margin="dense"
+                name="image"
+                label="Image URL"
+                value={formData.image}
+                onChange={(e) => setFormData({ ...formData, image: e.target.value })}
+                required
+              />
+              <FormControl fullWidth margin="dense">
+                <InputLabel>Category</InputLabel>
+                <Select
+                  value={formData.category}
+                  label="Category"
+                  onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                  required
+                >
+                  <MenuItem value="Cricket">Cricket</MenuItem>
+                  <MenuItem value="Tennis">Tennis</MenuItem>
+                  <MenuItem value="Table Tennis">Table Tennis</MenuItem>
+                  <MenuItem value="Fitness">Fitness</MenuItem>
+                  <MenuItem value="Basketball">Basketball</MenuItem>
+                  <MenuItem value="Badminton">Badminton</MenuItem>
+                </Select>
+              </FormControl>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={() => {
+                setOpenModal(false);
+                setEditItem(null);
+                setFormData({ name: "", price: "", image: "", category: "" });
+              }}>
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                variant="contained"
+                sx={{
+                  background: 'linear-gradient(to right, #facc15, #ef4444, #ec4899)',
+                  '&:hover': {
+                    background: 'linear-gradient(to right, #fbbf24, #dc2626, #db2777)',
+                  }
+                }}
+              >
+                {editItem !== null ? "Update" : "Add"}
+              </Button>
+            </DialogActions>
+          </form>
+        </Dialog>
       </div>
     </Sidebar>
   );

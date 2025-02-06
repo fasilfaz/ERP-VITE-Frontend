@@ -1,14 +1,15 @@
 import { useState, useEffect } from "react";
 import Sidebar from "../Components/Sidebar/Sidebar";
-import { useDispatch } from "react-redux";
 import { get } from "../Utils/Serivces/apiService";
 import { GET_ALL_ITEMS_API } from "../Utils/Contants/Api";
 import ItemList from "../Components/Item/ItemList";
+import FancyLoader from "../Components/Sidebar/Loader";
 
 const Homepage = () => {
   const [itemsData, setItemsData] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("Cricket");
-  
+    const [loading, setloading] = useState(false);
+
   const categories = [
     {
       name: "Cricket",
@@ -36,23 +37,27 @@ const Homepage = () => {
     },
   ];
 
-  const dispatch = useDispatch();
 
   useEffect(() => {
     (
       async () => {
           const res = await get(GET_ALL_ITEMS_API);
-          console.log(res, 'res');
+          setloading(true);
           if(res.success) {
             console.log(res.data, 'data');
             setItemsData(res.data);
+            setloading(false);
           } else {
             console.log(res);
+            setloading(false);
           }
       }
     )();
-  }, [dispatch]);
+  }, []);
 
+  if(loading){
+    return <FancyLoader />;
+  }
   return (
     <Sidebar>
       <div className="w-full p-4 bg-gray-50">

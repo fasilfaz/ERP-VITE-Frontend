@@ -9,7 +9,6 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { ShoppingCartOutlined } from "@mui/icons-material";
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import { Trophy, Bell } from 'lucide-react';
-import FancyLoader from "./Loader";
 
 const Sidebar = ({ children }) => {
   // ... previous state and effects remain the same ...
@@ -161,9 +160,6 @@ const Sidebar = ({ children }) => {
 
   return (
     <div className="flex min-h-screen w-screen bg-gray-50">
-      {loading && (
-       <FancyLoader />
-      )}
 
       {!isMobile && (
         <div

@@ -23,6 +23,7 @@ import { ADD_BILLS_API } from "../Utils/Contants/Api";
 const CartPage = () => {
   const [subTotal, setSubTotal] = useState(0);
   const [billPopup, setBillPopup] = useState(false);
+  // const [loading, setloading] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { cartItems } = useSelector((state) => state.rootReducer);

@@ -1,25 +1,22 @@
-import { useEffect } from "react";
 import { Form, Input, Button } from "antd";
 import { Link, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { post } from "../Utils/Serivces/apiService";
 import { LOGIN_API } from "../Utils/Contants/Api";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Trophy } from 'lucide-react';
 import axios from "axios";
+import { useState } from "react";
+import FancyLoader from "../Components/Sidebar/Loader";
 
 const Login = () => {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   
   const handleSubmit = async (value) => {
-    dispatch({
-      type: "SHOW_LOADING",
-    });
+   setLoading(true);
     axios.post(LOGIN_API, value).then((res) => {
       if (res.data.success) {
-        dispatch({ type: "HIDE_LOADING" });
+        setLoading(false);
         localStorage.setItem("token", res.data.token);
         toast.success(res.data.message, {
           position: "top-center",
@@ -35,7 +32,7 @@ const Login = () => {
       }
     })
     .catch((error) => {
-      dispatch({ type: "HIDE_LOADING" });
+      setLoading(false);
       toast.error(error.response.data.message || error.message, {
         position: "top-center",
         autoClose: 2000,
@@ -47,7 +44,6 @@ const Login = () => {
     });
   };
 
-  
 
   return (
     <>
